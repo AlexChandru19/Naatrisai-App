@@ -23,7 +23,7 @@ type Ch = (typeof CHANNELS)[number];
  *  The page only gives "N minutes ago", so `published` is an approximation to that precision. */
 async function fromPage(c: Ch): Promise<Video[]> {
   try {
-    const r = await fetch(`https://www.youtube.com/channel/${c.id}/videos`, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36", "Accept-Language": "en" }, next: { revalidate: 900 }, signal: AbortSignal.timeout(8000) });
+    const r = await fetch(`https://www.youtube.com/channel/${c.id}/videos`, { headers: { "User-Agent": "Mozilla/5.0 (compatible; NaatrisaiBot/1.0; +https://naatrisai.vercel.app/about)", "Accept-Language": "en" }, next: { revalidate: 900 }, signal: AbortSignal.timeout(8000) });
     if (!r.ok) return [];
     const m = (await r.text()).match(/var ytInitialData = (\{[\s\S]*?\});<\/script>/);
     if (!m) return [];

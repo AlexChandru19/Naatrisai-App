@@ -1,37 +1,46 @@
 import "server-only";
 
-/** NSE stocks & indices from Yahoo Finance's public chart/spark endpoints; index constituents from NSE Indices CSVs. */
+/** NSE stocks & indices from Yahoo Finance's public chart/spark endpoints.
+ *  Index constituents come from Wikipedia's NIFTY 50 / NIFTY Next 50 tables (which cite NSE Indices):
+ *  NSE Indices' own CSVs block automated clients, and we don't disguise our user agent. */
 const UA = { "User-Agent": "Mozilla/5.0 (compatible; NaatrisaiBot/1.0)" };
-const NSE_UA = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0" };
+const WIKI_UA = { "User-Agent": "Naatrisai/1.0 (https://naatrisai.vercel.app/about; news aggregator)" };
 const Y = "https://query1.finance.yahoo.com";
 
 export type Constituent = { sym: string; name: string; industry: string };
 export type StockQuote = Constituent & { price: number; prev: number; change: number; pct: number; high?: number; low?: number; volume?: number; hi52?: number; lo52?: number; time: number };
 
 export const SECTORS = [
-  { slug: "it", ta: "தகவல் தொழில்நுட்பம் (IT)", en: "IT", csv: "ind_niftyitlist.csv", index: "^CNXIT", emoji: "💻", news: /\b(it stocks?|it sector|infosys|tcs|wipro|hcl ?tech|tech mahindra|ltimindtree|coforge|persistent|mphasis|software services)\b|ஐடி/i },
-  { slug: "bank", ta: "வங்கிகள்", en: "Banks", csv: "ind_niftybanklist.csv", index: "^NSEBANK", emoji: "🏦", news: /\b(bank nifty|banks?|banking|hdfc bank|icici|sbi|axis bank|kotak|indusind|npa|lenders?|deposits?|loan growth)\b|வங்கி/i },
-  { slug: "pharma", ta: "மருந்து (பார்மா)", en: "Pharma", csv: "ind_niftypharmalist.csv", index: "^CNXPHARMA", emoji: "💊", news: /\b(pharma\w*|drug ?makers?|usfda|sun pharma|cipla|dr\.? reddy|lupin|aurobindo|divi'?s|zydus|biocon|healthcare)\b|மருந்து/i },
-  { slug: "auto", ta: "வாகனத் துறை", en: "Auto", csv: "ind_niftyautolist.csv", index: "^CNXAUTO", emoji: "🚗", news: /\b(auto stocks?|automakers?|auto sales|maruti|tata motors|mahindra|bajaj auto|hero motocorp|eicher|tvs motor|ashok leyland|ev sales|two-wheelers?|passenger vehicles?)\b|வாகன/i },
-  { slug: "fmcg", ta: "நுகர்பொருள் (FMCG)", en: "FMCG", csv: "ind_niftyfmcglist.csv", index: "^CNXFMCG", emoji: "🛒", news: /\b(fmcg|consumer goods|hul|hindustan unilever|itc|nestle|britannia|dabur|marico|tata consumer|godrej consumer|colgate|rural demand)\b|நுகர்பொருள்/i },
-  { slug: "metal", ta: "உலோகம்", en: "Metal", csv: "ind_niftymetallist.csv", index: "^CNXMETAL", emoji: "⚙️", news: /\b(metal stocks?|steel|tata steel|jsw steel|hindalco|vedanta|sail|nmdc|coal india|aluminium|copper|iron ore|zinc)\b|எஃகு|உலோக/i },
+  { slug: "it", ta: "தகவல் தொழில்நுட்பம் (IT)", en: "IT", match: (c: Constituent) => /information technology/i.test(c.industry), index: "^CNXIT", emoji: "💻", news: /\b(it stocks?|it sector|infosys|tcs|wipro|hcl ?tech|tech mahindra|ltimindtree|coforge|persistent|mphasis|software services)\b|ஐடி/i },
+  { slug: "bank", ta: "வங்கிகள்", en: "Banks", match: (c: Constituent) => /financial/i.test(c.industry) && /bank/i.test(c.name), index: "^NSEBANK", emoji: "🏦", news: /\b(bank nifty|banks?|banking|hdfc bank|icici|sbi|axis bank|kotak|indusind|npa|lenders?|deposits?|loan growth)\b|வங்கி/i },
+  { slug: "pharma", ta: "மருந்து (பார்மா)", en: "Pharma", match: (c: Constituent) => /healthcare|pharma/i.test(c.industry), index: "^CNXPHARMA", emoji: "💊", news: /\b(pharma\w*|drug ?makers?|usfda|sun pharma|cipla|dr\.? reddy|lupin|aurobindo|divi'?s|zydus|biocon|healthcare)\b|மருந்து/i },
+  { slug: "auto", ta: "வாகனத் துறை", en: "Auto", match: (c: Constituent) => /automobile/i.test(c.industry), index: "^CNXAUTO", emoji: "🚗", news: /\b(auto stocks?|automakers?|auto sales|maruti|tata motors|mahindra|bajaj auto|hero motocorp|eicher|tvs motor|ashok leyland|ev sales|two-wheelers?|passenger vehicles?)\b|வாகன/i },
+  { slug: "fmcg", ta: "நுகர்பொருள் (FMCG)", en: "FMCG", match: (c: Constituent) => /fast moving|fmcg/i.test(c.industry), index: "^CNXFMCG", emoji: "🛒", news: /\b(fmcg|consumer goods|hul|hindustan unilever|itc|nestle|britannia|dabur|marico|tata consumer|godrej consumer|colgate|rural demand)\b|நுகர்பொருள்/i },
+  { slug: "metal", ta: "உலோகம்", en: "Metal", match: (c: Constituent) => /metals|mining/i.test(c.industry), index: "^CNXMETAL", emoji: "⚙️", news: /\b(metal stocks?|steel|tata steel|jsw steel|hindalco|vedanta|sail|nmdc|coal india|aluminium|copper|iron ore|zinc)\b|எஃகு|உலோக/i },
 ] as const;
 export type SectorSlug = (typeof SECTORS)[number]["slug"];
 
-async function csv(file: string): Promise<Constituent[]> {
-  for (const base of ["https://www.niftyindices.com/IndexConstituent/", "https://nsearchives.nseindia.com/content/indices/"]) {
-    try {
-      const r = await fetch(base + file, { next: { revalidate: 86400 }, headers: NSE_UA, signal: AbortSignal.timeout(7000) });
-      if (!r.ok) continue;
-      const rows = (await r.text()).split(/\r?\n/).slice(1).map((l) => l.split(","));
-      const out = rows.filter((c) => c.length >= 3 && /^[A-Z0-9&-]+$/.test(c[2]?.trim() ?? "")).map((c) => ({ name: c[0].trim(), industry: c[1].trim(), sym: c[2].trim() }));
-      if (out.length >= 5) return out;
-    } catch {}
-  }
-  return [];
+const clean = (x: string) => x.replace(/<ref[^>]*\/>|<ref[^>]*>[\s\S]*?<\/ref>/g, "").replace(/\{\{[^}]*\}\}/g, "").replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g, "$1").replace(/'{2,}/g, "").replace(/^\s*(style|align)="[^"]*"\s*\|/, "").trim();
+async function wikiList(page: string): Promise<Constituent[]> {
+  try {
+    const r = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&page=${page}&prop=wikitext&format=json&formatversion=2`, { next: { revalidate: 86400 }, headers: WIKI_UA, signal: AbortSignal.timeout(8000) });
+    if (!r.ok) return [];
+    const w: string = (await r.json())?.parse?.wikitext ?? "";
+    const i = w.search(/\{\|[^\n]*id="constituents"/); if (i < 0) return [];
+    const table = w.slice(i, w.indexOf("\n|}", i));
+    const out: Constituent[] = [];
+    for (const row of table.split(/\n\|-[^\n]*/).slice(1)) {
+      if (/^\s*!/.test(row.trim())) continue;
+      const cells = row.split(/\n\||\|\|/).map((c) => clean(c.replace(/^\n?\|/, ""))).filter((c) => c !== "");
+      if (cells.length < 3) continue;
+      const sym = cells[1].replace(/\s+/g, "").toUpperCase();
+      if (/^[A-Z0-9&-]{1,20}$/.test(sym)) out.push({ name: cells[0], sym, industry: cells[2] });
+    }
+    return out.length >= 40 ? out : [];
+  } catch { return []; }
 }
-export const getNifty50List = () => csv("ind_nifty50list.csv");
-export const getNiftyNext50List = () => csv("ind_niftynext50list.csv");
+export const getNifty50List = () => wikiList("NIFTY_50");
+export const getNiftyNext50List = () => wikiList("NIFTY_Next_50");
 
 type SparkMeta = { regularMarketPrice?: number; chartPreviousClose?: number; previousClose?: number; regularMarketTime?: number; regularMarketDayHigh?: number; regularMarketDayLow?: number; regularMarketVolume?: number; fiftyTwoWeekHigh?: number; fiftyTwoWeekLow?: number; shortName?: string; longName?: string };
 /** Live-ish quotes for up to ~100 NSE symbols (Yahoo spark, 20 per request). Missing symbols are left out. */
@@ -67,7 +76,8 @@ export async function getNifty50Board(): Promise<Board> {
 export async function getSectorBoard(slug: string) {
   const s = SECTORS.find((x) => x.slug === slug);
   if (!s) return null;
-  const list = await csv(s.csv);
+  const all = [...(await getNifty50List()), ...(await getNiftyNext50List())];
+  const list = all.filter((c) => s.match(c)).filter((c, i, a) => a.findIndex((x) => x.sym === c.sym) === i);
   const stocks = list.length ? await quotes(list) : [];
   return { sector: s, stocks, listed: list.length };
 }

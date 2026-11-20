@@ -14,7 +14,7 @@ const DATA: [string, string, string, string][] = [
   ["📰", "செய்திகள்", "News", "Publishers' public RSS feeds and Google News RSS (headline, short summary, image, link). Refreshed every few minutes."],
   ["🥇", "தங்கம் / வெள்ளி", "Gold / silver", "Goodreturns city rates and IBJA benchmark rates (published twice a day)."],
   ["⛽", "பெட்ரோல் / டீசல்", "Petrol / diesel", "Goodreturns daily retail prices for cities, states and Tamil Nadu districts."],
-  ["📈", "பங்குச் சந்தை", "Stock market", "Yahoo Finance charts (indices, sectors, FX, commodities; may be delayed), NSE market status, niftyindices constituents."],
+  ["📈", "பங்குச் சந்தை", "Stock market", "Yahoo Finance charts (indices, sectors, FX, commodities; may be delayed), index constituents from Wikipedia (NSE Indices blocks automated access), AMFI mutual fund NAVs."],
   ["⚠️", "எச்சரிக்கைகள்", "Alerts", "NDMA SACHET Common Alerting Protocol feed (IMD, state disaster authorities)."],
   ["🌦️", "வானிலை & காற்றுத் தரம்", "Weather & air quality", "Open-Meteo forecast and CAMS-based air-quality model (US AQI scale, not CPCB)."],
   ["🏏", "கிரிக்கெட்", "Cricket", "Public live-score RSS feed."],

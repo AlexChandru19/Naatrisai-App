@@ -9,7 +9,10 @@ const hintOf = (s: Record<string, string | undefined>) => (s.t && s.u ? { title:
 export async function generateMetadata({ params, searchParams }: P): Promise<Metadata> {
   const [{ id }, sp] = await Promise.all([params, searchParams]);
   const t = hintOf(sp)?.title;
-  return { title: t ? `${t} — முழு கவரேஜ் · Full coverage` : "முழு கவரேஜ் · Full coverage", robots: { index: false }, alternates: { canonical: `/story/${id}` } };
+  const h = hintOf(sp);
+  const og = `/og?${new URLSearchParams({ t: t ?? "முழு கவரேஜ் · Full coverage", s: h?.source ?? "" })}`;
+  return { title: t ? `${t} — முழு கவரேஜ் · Full coverage` : "முழு கவரேஜ் · Full coverage", robots: { index: false }, alternates: { canonical: `/story/${id}` },
+    openGraph: { title: t ?? "முழு கவரேஜ் · Full coverage", images: [{ url: og, width: 1200, height: 630 }] }, twitter: { card: "summary_large_image", images: [og] } };
 }
 
 export default async function StoryPage({ params, searchParams }: P) {

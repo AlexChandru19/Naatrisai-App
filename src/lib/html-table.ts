@@ -20,7 +20,7 @@ export const delta = (s: string | undefined) => {
   return d ? Number(d[1] + d[2]) : NaN;
 };
 
-export const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
+export const UA = "Mozilla/5.0 (compatible; NaatrisaiBot/1.0; +https://naatrisai.vercel.app/about)";
 export async function page(url: string, revalidate: number): Promise<string | null> {
   try {
     const r = await fetch(url, { next: { revalidate }, headers: { "User-Agent": UA, Accept: "text/html" }, signal: AbortSignal.timeout(9000) });

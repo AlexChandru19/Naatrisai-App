@@ -4,6 +4,7 @@ import { BUCKETS, buildDigest, buildQuiz } from "@/lib/exam";
 import { istDate } from "@/lib/calendar";
 import { PageTitle } from "@/components/hero";
 import { ExamDigest } from "@/components/exam-view";
+import { WordOfDay } from "@/components/word-of-day";
 
 export const revalidate = 1800;
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default async function ExamDigestPage() {
   return (
     <>
       <PageTitle emoji="📚" ta="TNPSC / UPSC நடப்பு நிகழ்வுகள்" en="TNPSC / UPSC current affairs" subTa="இன்றைய முக்கியச் செய்திகள் பாடத்திட்டப் பிரிவுகளாக — சுருக்கக் குறிப்புகள், படிப்புப் பட்டியல், அச்சு/PDF, உண்மைத் தலைப்புகளில் வினாடி-வினா" subEn="Today's hard news in syllabus buckets — study bullets, study list, print/PDF and a quiz built from real headlines" />
+      <div className="mt-4"><WordOfDay day={date} /></div>
       <ExamDigest buckets={BUCKETS.map(({ key, ta, en, emoji }) => ({ key, ta, en, emoji }))} items={d} quiz={quiz} date={date} />
     </>
   );

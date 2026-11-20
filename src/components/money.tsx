@@ -221,7 +221,7 @@ export function StocksPanel({ m, movers, status }: { m: Markets; movers: Movers 
           </div>
         </div>
       )}
-      <Src><T ta={`விலைகள்: Yahoo Finance (தாமதமான தரவு) · நிஃப்டி 50 பட்டியல்: NSE Indices · சந்தை நிலை: ${status.source === "NSE" ? "NSE" : "IST நேரக் கணிப்பு"} · VIX உயர்வு = அதிக பதற்றம்`} en={`Prices: Yahoo Finance (delayed) · NIFTY 50 list: NSE Indices · status: ${status.source === "NSE" ? "NSE" : "IST session clock"} · higher VIX = more nervous market`} />{last > 0 && <> · <When t={last} label={{ ta: "கடைசி வர்த்தகம்", en: "last trade" }} /></>}</Src>
+      <Src><T ta={`விலைகள்: Yahoo Finance (தாமதமான தரவு) · நிஃப்டி 50 பட்டியல்: Wikipedia (NSE Indices) · சந்தை நிலை: ${status.source === "NSE" ? "NSE" : "IST நேரக் கணிப்பு"} · VIX உயர்வு = அதிக பதற்றம்`} en={`Prices: Yahoo Finance (delayed) · NIFTY 50 list: Wikipedia (citing NSE Indices) · status: ${status.source === "NSE" ? "NSE" : "IST session clock"} · higher VIX = more nervous market`} />{last > 0 && <> · <When t={last} label={{ ta: "கடைசி வர்த்தகம்", en: "last trade" }} /></>}</Src>
     </section>
   );
 }

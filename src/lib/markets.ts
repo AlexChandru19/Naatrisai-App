@@ -69,19 +69,13 @@ export type Mover = { sym: string; name: string; price: number; pct: number; cha
 export type Movers = { gainers: Mover[]; losers: Mover[]; breadth: { up: number; down: number; flat: number }; count: number; time: number | null };
 
 async function constituents(): Promise<string[]> {
-  for (const u of ["https://www.niftyindices.com/IndexConstituent/ind_nifty50list.csv", "https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv"]) {
-    try {
-      const r = await fetch(u, { next: { revalidate: 86400 }, headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0" }, signal: AbortSignal.timeout(6000) });
-      if (!r.ok) continue;
-      const syms = (await r.text()).split(/\r?\n/).slice(1).map((l) => l.split(",")[2]?.trim()).filter((s): s is string => !!s && /^[A-Z0-9&-]+$/.test(s));
-      if (syms.length >= 45) return syms;
-    } catch {}
-  }
-  return [];
+  // Wikipedia's NIFTY 50 table (NSE Indices' CSVs block automated clients; we don't disguise our user agent).
+  const { getNifty50List } = await import("./stocks");
+  return (await getNifty50List()).map((c) => c.sym);
 }
 type Spark = { spark?: { result?: { symbol: string; response: { meta: { regularMarketPrice?: number; chartPreviousClose?: number; regularMarketTime?: number; shortName?: string; longName?: string } }[] }[] } };
 
-/** Top gainers/losers among NIFTY 50 stocks — constituents from NSE Indices, prices from Yahoo Finance. */
+/** Top gainers/losers among NIFTY 50 stocks — constituents from Wikipedia (citing NSE Indices), prices from Yahoo Finance. */
 export async function getMovers(): Promise<Movers | null> {
   const syms = await constituents();
   if (!syms.length) return null;
@@ -115,7 +109,8 @@ export async function getMovers(): Promise<Movers | null> {
 export type MarketStatus = { open: boolean; label: { ta: string; en: string }; source: "NSE" | "clock"; tradeDate?: string };
 export async function getMarketStatus(lastTrade?: number): Promise<MarketStatus> {
   try {
-    const r = await fetch("https://www.nseindia.com/api/marketStatus", { next: { revalidate: 120 }, headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0", Accept: "application/json" }, signal: AbortSignal.timeout(5000) });
+    // NSE blocks most automated clients; we identify honestly and fall back to the session clock when refused.
+    const r = await fetch("https://www.nseindia.com/api/marketStatus", { next: { revalidate: 120 }, headers: { "User-Agent": "Mozilla/5.0 (compatible; NaatrisaiBot/1.0; +https://naatrisai.vercel.app/about)", Accept: "application/json" }, signal: AbortSignal.timeout(4000) });
     if (r.ok) {
       const j = (await r.json()) as { marketState?: { market: string; marketStatus: string; tradeDate?: string; marketStatusMessage?: string }[] };
       const cm = j.marketState?.find((m) => m.market === "Capital Market");

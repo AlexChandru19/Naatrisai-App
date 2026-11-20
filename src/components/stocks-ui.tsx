@@ -25,6 +25,8 @@ export const MARKET_TABS = [
   { href: "/markets/nifty50", ta: "நிஃப்டி 50 & ஹீட்மேப்", en: "NIFTY 50 & heatmap", icon: "🟩" },
   { href: "/markets/sector/it", ta: "துறைகள்", en: "Sectors", icon: "🏭", match: "/markets/sector" },
   { href: "/markets/watchlist", ta: "என் கண்காணிப்பு", en: "My watchlist", icon: "⭐" },
+  { href: "/markets/mutual-funds", ta: "மியூச்சுவல் ஃபண்ட்", en: "Mutual funds", icon: "🏦" },
+  { href: "/markets/ipo", ta: "IPO & முடிவுகள்", en: "IPOs & results", icon: "🗓️" },
   { href: "/markets/calculators", ta: "கணிப்பான்கள்", en: "Calculators", icon: "🧮" },
 ];
 export function MarketsNav() {
@@ -206,7 +208,7 @@ export function Screener({ stocks, title }: { stocks: StockQuote[]; title?: { ta
         </div>
       )}
       {!list.length && <p className="mt-4 text-sm opacity-70"><T ta="பொருந்தும் பங்குகள் இல்லை." en="No matching stocks." /></p>}
-      <p className="mt-3 text-[11px] opacity-70"><T ta="நிறம் = இன்றைய % மாற்றம் (முந்தைய முடிவிலிருந்து) · விலைகள்: Yahoo Finance (தாமதம்) · பட்டியல்: NSE Indices" en="Colour = today's % change vs previous close · prices: Yahoo Finance (delayed) · constituents: NSE Indices" /></p>
+      <p className="mt-3 text-[11px] opacity-70"><T ta="நிறம் = இன்றைய % மாற்றம் (முந்தைய முடிவிலிருந்து) · விலைகள்: Yahoo Finance (தாமதம்) · பட்டியல்: Wikipedia (NSE Indices)" en="Colour = today's % change vs previous close · prices: Yahoo Finance (delayed) · constituents: Wikipedia (citing NSE Indices)" /></p>
     </section>
   );
 }

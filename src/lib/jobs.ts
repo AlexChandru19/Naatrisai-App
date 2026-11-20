@@ -5,7 +5,7 @@ export type Notice = { title: string; link: string; kind: string };
 /** "What's new" list on the TNPSC home page (official). The site publishes no dates for these entries. */
 export async function getTnpsc(): Promise<{ items: Notice[]; ok: boolean }> {
   try {
-    const r = await fetch("https://www.tnpsc.gov.in/", { next: { revalidate: 3600 }, headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0" }, signal: AbortSignal.timeout(8000) });
+    const r = await fetch("https://www.tnpsc.gov.in/", { next: { revalidate: 3600 }, headers: { "User-Agent": "Mozilla/5.0 (compatible; NaatrisaiBot/1.0; +https://naatrisai.vercel.app/about)" }, signal: AbortSignal.timeout(8000) });
     if (!r.ok) throw 0;
     const html = await r.text();
     const seen = new Set<string>();

@@ -14,7 +14,7 @@ export function generateStaticParams() { return SECTORS.map((s) => ({ slug: s.sl
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const s = SECTORS.find((x) => x.slug === slug);
-  return s ? { title: `${s.ta} துறை · NIFTY ${s.en} sector`, description: `NIFTY ${s.en} index chart, constituent stocks and sector news.`, alternates: { canonical: `/markets/sector/${s.slug}` } } : { title: "Sector" };
+  return s ? { title: `${s.ta} துறை · NIFTY ${s.en} sector`, description: `NIFTY ${s.en} index chart, sector stocks and news.`, alternates: { canonical: `/markets/sector/${s.slug}` } } : { title: "Sector" };
 }
 
 export default async function Sector({ params }: { params: Promise<{ slug: string }> }) {
@@ -25,7 +25,7 @@ export default async function Sector({ params }: { params: Promise<{ slug: strin
   const sn = news.articles.filter((a) => b.sector.news.test(a.title) || b.stocks.some((s) => new RegExp(`\\b${s.sym}\\b`).test(a.title))).slice(0, 30);
   return (
     <>
-      <PageTitle emoji={b.sector.emoji} ta={`நிஃப்டி ${b.sector.ta}`} en={`NIFTY ${b.sector.en}`} subTa={`குறியீட்டு வரைபடம் · ${b.stocks.length} பங்குகள் · துறைச் செய்திகள்`} subEn={`Index chart · ${b.stocks.length} constituent stocks · sector news`}>
+      <PageTitle emoji={b.sector.emoji} ta={`நிஃப்டி ${b.sector.ta}`} en={`NIFTY ${b.sector.en}`} subTa={`குறியீட்டு வரைபடம் · இத்துறையின் ${b.stocks.length} நிஃப்டி 100 பங்குகள் · துறைச் செய்திகள்`} subEn={`Index chart · ${b.stocks.length} NIFTY 100 stocks in this sector · sector news`}>
         {idx && <div className="mt-3 flex flex-wrap items-end gap-3"><span className="text-3xl font-black tabular-nums">{fmt(idx.d.price)}</span><Pct v={idx.d.pct} className="pb-1" /></div>}
       </PageTitle>
       <MarketsNav />

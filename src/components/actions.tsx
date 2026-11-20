@@ -2,6 +2,7 @@
 import { useState } from "react";
 import type { Article } from "@/lib/types";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { REACTIONS, usePrefs } from "./providers";
 import { storyUrl } from "@/lib/story-url";
 import { createPortal } from "react-dom";
@@ -20,6 +21,7 @@ export function ArticleActions({ a, compact = false }: { a: Article; compact?: b
   const [pick, setPick] = useState(false);
   const aiOn = useAiEnabled();
   const audio = useAudio();
+  const router = useRouter();
   const onAir = audio.state !== "idle" && audio.queue[audio.idx]?.id === a.id;
   const playing = onAir && audio.state === "playing";
   const [open, setOpen] = useState(false);
@@ -72,11 +74,13 @@ export function ArticleActions({ a, compact = false }: { a: Article; compact?: b
             {[
               { k: "peek", t: lang === "ta" ? "👁️ விரைவுப் பார்வை" : "👁️ Quick peek", f: () => setPeek(true) },
               { k: "list", t: lang === "ta" ? "📂 வாசிப்புப் பட்டியலில் சேர்" : "📂 Add to reading list", f: () => setPick(true) },
+              { k: "wa", t: lang === "ta" ? "🟢 WhatsApp-இல் பகிர்" : "🟢 Share on WhatsApp", f: () => window.open(`https://wa.me/?text=${encodeURIComponent(`*${a.title}*\n— ${a.source}\n${a.link}\n\nநாற்றிசை: ${location.origin}${storyUrl(a)}`)}`, "_blank", "noopener") },
               { k: "tg", t: "✈️ Telegram", f: () => window.open(`https://t.me/share/url?url=${encodeURIComponent(a.link)}&text=${encodeURIComponent(a.title)}`, "_blank", "noopener") },
               { k: "x", t: lang === "ta" ? "𝕏 X-இல் பகிர்" : "𝕏 Share on X", f: () => window.open(`https://x.com/intent/post?text=${encodeURIComponent(a.title)}&url=${encodeURIComponent(a.link)}`, "_blank", "noopener") },
               { k: "txt", t: lang === "ta" ? "📋 தலைப்பு + இணைப்பை நகலெடு" : "📋 Copy headline + link", f: async () => { try { await navigator.clipboard.writeText(`${a.title}\n— ${a.source}\n${a.link}`); flash(lang === "ta" ? "நகலெடுக்கப்பட்டது" : "Copied"); } catch {} } },
-              { k: "img", t: lang === "ta" ? "🖼️ படமாகப் பகிர்" : "🖼️ Share as image", f: async () => { const r = await shareImage(a, lang); if (r === "downloaded") flash(lang === "ta" ? "படம் பதிவிறக்கப்பட்டது" : "Image downloaded"); } },
+              { k: "img", t: lang === "ta" ? "🖼️ செய்தி அட்டை (Instagram / WhatsApp Status)" : "🖼️ Story card (Instagram / WhatsApp Status)", f: async () => { const r = await shareImage(a, lang); if (r === "downloaded") flash(lang === "ta" ? "படம் பதிவிறக்கப்பட்டது" : "Image downloaded"); } },
               { k: "tr", t: a.lang === "ta" ? "🌐 Translate to English (Google)" : "🌐 தமிழில் மொழிபெயர் (Google)", f: () => window.open(`https://translate.google.com/translate?sl=auto&tl=${a.lang === "ta" ? "en" : "ta"}&u=${encodeURIComponent(a.link)}`, "_blank", "noopener") },
+              { k: "err", t: lang === "ta" ? "🚩 பிழையைப் புகாரளி" : "🚩 Report an error", f: () => { router.push(`/corrections?${new URLSearchParams({ u: a.link, t: a.title.slice(0, 200) })}`); } },
               { k: "hide", t: lang === "ta" ? "🙈 இந்தச் செய்தியை மறை" : "🙈 Hide this story", f: () => { hide("ids", a.id); flash(lang === "ta" ? "மறைக்கப்பட்டது" : "Hidden"); } },
               { k: "src", t: lang === "ta" ? `🚫 ${a.source} செய்திகளை மறை` : `🚫 Hide stories from ${a.source}`, f: () => { hide("sources", a.source); flash(lang === "ta" ? "மூலம் மறைக்கப்பட்டது · அமைப்புகளில் மீட்கலாம்" : "Source hidden · undo in Settings"); } },
             ].map((o) => <button key={o.k} onClick={() => { setMore(false); o.f(); }} className="block w-full rounded-xl px-3 py-2 text-left hover:bg-ink-50 dark:hover:bg-white/10">{o.t}</button>)}
