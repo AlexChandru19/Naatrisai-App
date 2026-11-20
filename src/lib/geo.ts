@@ -1,0 +1,113 @@
+export type District = { slug: string; en: string; ta: string; alt: string[]; ex?: string[]; ambiguous?: boolean; lat: number; lon: number; zone: "north" | "west" | "central" | "delta" | "south" };
+
+// All 38 districts of Tamil Nadu (HQ coordinates for the weather widget)
+export const DISTRICTS: District[] = [
+  { slug: "ariyalur", en: "Ariyalur", ta: "அரியலூர்", alt: [], lat: 11.14, lon: 79.08, zone: "central" },
+  { slug: "chengalpattu", en: "Chengalpattu", ta: "செங்கல்பட்டு", alt: ["Tambaram", "தாம்பரம்", "Mahabalipuram", "மாமல்லபுரம்"], lat: 12.69, lon: 79.98, zone: "north" },
+  { slug: "chennai", en: "Chennai", ta: "சென்னை", alt: ["Madras"], lat: 13.08, lon: 80.27, zone: "north" },
+  { slug: "coimbatore", en: "Coimbatore", ta: "கோயம்புத்தூர்", alt: ["கோவை", "Kovai", "Pollachi", "பொள்ளாச்சி"], lat: 11.02, lon: 76.96, zone: "west" },
+  { slug: "cuddalore", en: "Cuddalore", ta: "கடலூர்", alt: ["Neyveli", "நெய்வேலி", "Panruti", "பண்ருட்டி"], lat: 11.75, lon: 79.75, zone: "north" },
+  { slug: "dharmapuri", en: "Dharmapuri", ta: "தருமபுரி", alt: ["தர்மபுரி", "Hogenakkal", "ஒகேனக்கல்"], lat: 12.13, lon: 78.16, zone: "west" },
+  { slug: "dindigul", en: "Dindigul", ta: "திண்டுக்கல்", alt: ["Kodaikanal", "கொடைக்கானல்", "Oddanchatram", "ஒட்டன்சத்திரம்"], lat: 10.36, lon: 77.98, zone: "south" },
+  { slug: "erode", en: "Erode", ta: "ஈரோடு", alt: ["Gobichettipalayam", "கோபிசெட்டிபாளையம்"], ambiguous: true, lat: 11.34, lon: 77.72, zone: "west" },
+  { slug: "kallakurichi", en: "Kallakurichi", ta: "கள்ளக்குறிச்சி", alt: [], lat: 11.74, lon: 78.96, zone: "north" },
+  { slug: "kancheepuram", en: "Kancheepuram", ta: "காஞ்சிபுரம்", alt: ["Kanchipuram", "காஞ்சி", "Sriperumbudur", "ஸ்ரீபெரும்புதூர்"], lat: 12.83, lon: 79.7, zone: "north" },
+  { slug: "kanniyakumari", en: "Kanniyakumari", ta: "கன்னியாகுமரி", alt: ["Kanyakumari", "குமரி", "Nagercoil", "நாகர்கோவில்"], ex: ["குமரி அனந்தன்"], lat: 8.18, lon: 77.41, zone: "south" },
+  { slug: "karur", en: "Karur", ta: "கரூர்", alt: [], ambiguous: true, lat: 10.96, lon: 78.08, zone: "central" },
+  { slug: "krishnagiri", en: "Krishnagiri", ta: "கிருஷ்ணகிரி", alt: ["Hosur", "ஓசூர்"], lat: 12.52, lon: 78.21, zone: "west" },
+  { slug: "madurai", en: "Madurai", ta: "மதுரை", alt: [], lat: 9.93, lon: 78.12, zone: "south" },
+  { slug: "mayiladuthurai", en: "Mayiladuthurai", ta: "மயிலாடுதுறை", alt: ["Sirkazhi", "சீர்காழி"], lat: 11.1, lon: 79.65, zone: "delta" },
+  { slug: "nagapattinam", en: "Nagapattinam", ta: "நாகப்பட்டினம்", alt: ["நாகை", "Velankanni", "வேளாங்கண்ணி"], lat: 10.77, lon: 79.84, zone: "delta" },
+  { slug: "namakkal", en: "Namakkal", ta: "நாமக்கல்", alt: ["Tiruchengode", "திருச்செங்கோடு"], lat: 11.22, lon: 78.17, zone: "west" },
+  { slug: "nilgiris", en: "Nilgiris", ta: "நீலகிரி", alt: ["Ooty", "உதகை", "ஊட்டி", "Coonoor", "குன்னூர்"], lat: 11.41, lon: 76.7, zone: "west" },
+  { slug: "perambalur", en: "Perambalur", ta: "பெரம்பலூர்", alt: [], lat: 11.23, lon: 78.88, zone: "central" },
+  { slug: "pudukkottai", en: "Pudukkottai", ta: "புதுக்கோட்டை", alt: [], lat: 10.38, lon: 78.82, zone: "central" },
+  { slug: "ramanathapuram", en: "Ramanathapuram", ta: "ராமநாதபுரம்", alt: ["Rameswaram", "ராமேஸ்வரம்", "ராமேசுவரம்"], lat: 9.37, lon: 78.83, zone: "south" },
+  { slug: "ranipet", en: "Ranipet", ta: "ராணிப்பேட்டை", alt: ["Arakkonam", "அரக்கோணம்"], lat: 12.93, lon: 79.33, zone: "north" },
+  { slug: "salem", en: "Salem", ta: "சேலம்", alt: ["சேலத்", "Yercaud", "ஏற்காடு", "Mettur", "மேட்டூர்"], ambiguous: true, lat: 11.66, lon: 78.15, zone: "west" },
+  { slug: "sivaganga", en: "Sivaganga", ta: "சிவகங்கை", alt: ["Karaikudi", "காரைக்குடி", "Keeladi", "கீழடி"], lat: 9.85, lon: 78.48, zone: "south" },
+  { slug: "tenkasi", en: "Tenkasi", ta: "தென்காசி", alt: ["Courtallam", "குற்றாலம்"], lat: 8.96, lon: 77.3, zone: "south" },
+  { slug: "thanjavur", en: "Thanjavur", ta: "தஞ்சாவூர்", alt: ["தஞ்சை", "Kumbakonam", "கும்பகோணம்"], lat: 10.79, lon: 79.14, zone: "delta" },
+  { slug: "theni", en: "Theni", ta: "தேனி", alt: ["Bodinayakanur", "போடிநாயக்கனூர்"], ex: ["தேனிலவு"], lat: 10.01, lon: 77.48, zone: "south" },
+  { slug: "thoothukudi", en: "Thoothukudi", ta: "தூத்துக்குடி", alt: ["Tuticorin", "Tiruchendur", "திருச்செந்தூர்"], lat: 8.76, lon: 78.13, zone: "south" },
+  { slug: "tiruchirappalli", en: "Tiruchirappalli", ta: "திருச்சிராப்பள்ளி", alt: ["Trichy", "Tiruchi", "திருச்சி", "Srirangam", "ஸ்ரீரங்கம்"], lat: 10.8, lon: 78.69, zone: "central" },
+  { slug: "tirunelveli", en: "Tirunelveli", ta: "திருநெல்வேலி", alt: ["நெல்லை", "Nellai"], lat: 8.71, lon: 77.76, zone: "south" },
+  { slug: "tirupathur", en: "Tirupathur", ta: "திருப்பத்தூர்", ambiguous: true, alt: ["Vaniyambadi", "வாணியம்பாடி", "Ambur", "ஆம்பூர்"], lat: 12.5, lon: 78.57, zone: "north" },
+  { slug: "tiruppur", en: "Tiruppur", ta: "திருப்பூர்", alt: ["Tirupur", "Udumalpet", "உடுமலை"], lat: 11.11, lon: 77.34, zone: "west" },
+  { slug: "tiruvallur", en: "Tiruvallur", ta: "திருவள்ளூர்", alt: ["Avadi", "ஆவடி", "Ponneri", "பொன்னேரி"], lat: 13.14, lon: 79.91, zone: "north" },
+  { slug: "tiruvannamalai", en: "Tiruvannamalai", ta: "திருவண்ணாமலை", alt: [], lat: 12.23, lon: 79.07, zone: "north" },
+  { slug: "tiruvarur", en: "Tiruvarur", ta: "திருவாரூர்", alt: ["Mannargudi", "மன்னார்குடி"], lat: 10.77, lon: 79.64, zone: "delta" },
+  { slug: "vellore", en: "Vellore", ta: "வேலூர்", alt: ["Katpadi", "காட்பாடி"], lat: 12.92, lon: 79.13, zone: "north" },
+  { slug: "viluppuram", en: "Viluppuram", ta: "விழுப்புரம்", alt: ["Villupuram", "Tindivanam", "திண்டிவனம்"], lat: 11.94, lon: 79.49, zone: "north" },
+  { slug: "virudhunagar", en: "Virudhunagar", ta: "விருதுநகர்", alt: ["Sivakasi", "சிவகாசி", "Srivilliputhur", "ஸ்ரீவில்லிபுத்தூர்"], lat: 9.58, lon: 77.96, zone: "south" },
+];
+
+export const ZONES: Record<District["zone"], { en: string; ta: string }> = {
+  north: { en: "North", ta: "வட மண்டலம்" },
+  west: { en: "West (Kongu)", ta: "மேற்கு (கொங்கு)" },
+  central: { en: "Central", ta: "மத்திய மண்டலம்" },
+  delta: { en: "Cauvery Delta", ta: "காவிரி டெல்டா" },
+  south: { en: "South", ta: "தென் மண்டலம்" },
+};
+
+export type State = { slug: string; en: string; ta: string; ut?: boolean; alt: string[]; ex?: string[]; ambiguous?: boolean; region: "south" | "north" | "east" | "west" | "central" | "northeast"; abbr: string };
+
+export const STATES: State[] = [
+  { slug: "andhra-pradesh", en: "Andhra Pradesh", ta: "ஆந்திரா", alt: ["Amaravati", "Vijayawada", "Visakhapatnam", "Tirupati", "ஆந்திர"], region: "south", abbr: "AP" },
+  { slug: "arunachal-pradesh", en: "Arunachal Pradesh", ta: "அருணாச்சல பிரதேசம்", alt: ["Itanagar"], region: "northeast", abbr: "AR" },
+  { slug: "assam", en: "Assam", ta: "அசாம்", alt: ["Guwahati", "அஸ்ஸாம்"], region: "northeast", abbr: "AS" },
+  { slug: "bihar", en: "Bihar", ta: "பீகார்", alt: ["Patna"], region: "east", abbr: "BR" },
+  { slug: "chhattisgarh", en: "Chhattisgarh", ta: "சத்தீஸ்கர்", alt: ["Raipur"], region: "central", abbr: "CG" },
+  { slug: "goa", en: "Goa", ta: "கோவா", alt: ["Panaji"], ex: ["கோவாக்சின்"], region: "west", abbr: "GA" },
+  { slug: "gujarat", en: "Gujarat", ta: "குஜராத்", alt: ["Ahmedabad", "Gandhinagar", "Surat"], region: "west", abbr: "GJ" },
+  { slug: "haryana", en: "Haryana", ta: "ஹரியானா", alt: ["Gurugram", "Gurgaon"], region: "north", abbr: "HR" },
+  { slug: "himachal-pradesh", en: "Himachal Pradesh", ta: "இமாச்சல பிரதேசம்", alt: ["Shimla"], region: "north", abbr: "HP" },
+  { slug: "jharkhand", en: "Jharkhand", ta: "ஜார்க்கண்ட்", alt: ["Ranchi"], region: "east", abbr: "JH" },
+  { slug: "karnataka", en: "Karnataka", ta: "கர்நாடகா", alt: ["Bengaluru", "Bangalore", "Mysuru", "Mangaluru", "பெங்களூரு", "கர்நாடக"], region: "south", abbr: "KA" },
+  { slug: "kerala", en: "Kerala", ta: "கேரளா", alt: ["Thiruvananthapuram", "Kochi", "Kozhikode", "Sabarimala", "கேரள", "சபரிமலை"], region: "south", abbr: "KL" },
+  { slug: "madhya-pradesh", en: "Madhya Pradesh", ta: "மத்திய பிரதேசம்", alt: ["Bhopal", "Indore"], region: "central", abbr: "MP" },
+  { slug: "maharashtra", en: "Maharashtra", ta: "மகாராஷ்டிரா", alt: ["Mumbai", "Pune", "Nagpur", "மும்பை"], region: "west", abbr: "MH" },
+  { slug: "manipur", en: "Manipur", ta: "மணிப்பூர்", alt: ["Imphal"], region: "northeast", abbr: "MN" },
+  { slug: "meghalaya", en: "Meghalaya", ta: "மேகாலயா", alt: ["Shillong"], region: "northeast", abbr: "ML" },
+  { slug: "mizoram", en: "Mizoram", ta: "மிசோரம்", alt: ["Aizawl"], region: "northeast", abbr: "MZ" },
+  { slug: "nagaland", en: "Nagaland", ta: "நாகாலாந்து", alt: ["Kohima"], region: "northeast", abbr: "NL" },
+  { slug: "odisha", en: "Odisha", ta: "ஒடிசா", alt: ["Bhubaneswar", "Cuttack", "Orissa"], region: "east", abbr: "OD" },
+  { slug: "punjab", en: "Punjab", ta: "பஞ்சாப்", alt: ["Amritsar", "Ludhiana", "Jalandhar"], ex: ["Pakistan's Punjab", "Punjab, Pakistan", "Punjab province", "Lahore"], region: "north", abbr: "PB" },
+  { slug: "rajasthan", en: "Rajasthan", ta: "ராஜஸ்தான்", alt: ["Jaipur", "Jodhpur", "Udaipur"], region: "north", abbr: "RJ" },
+  { slug: "sikkim", en: "Sikkim", ta: "சிக்கிம்", alt: ["Gangtok"], region: "northeast", abbr: "SK" },
+  { slug: "tamil-nadu", en: "Tamil Nadu", ta: "தமிழ்நாடு", alt: ["Chennai", "தமிழக", "சென்னை"], region: "south", abbr: "TN" },
+  { slug: "telangana", en: "Telangana", ta: "தெலங்கானா", alt: ["Hyderabad", "ஹைதராபாத்", "தெலுங்கானா"], region: "south", abbr: "TS" },
+  { slug: "tripura", en: "Tripura", ta: "திரிபுரா", alt: ["Agartala"], region: "northeast", abbr: "TR" },
+  { slug: "uttar-pradesh", en: "Uttar Pradesh", ta: "உத்தரப் பிரதேசம்", alt: ["Lucknow", "Varanasi", "Ayodhya", "Noida", "உத்தர பிரதேச"], region: "north", abbr: "UP" },
+  { slug: "uttarakhand", en: "Uttarakhand", ta: "உத்தரகாண்ட்", alt: ["Dehradun"], region: "north", abbr: "UK" },
+  { slug: "west-bengal", en: "West Bengal", ta: "மேற்கு வங்கம்", alt: ["Kolkata", "கொல்கத்தா", "மேற்கு வங்க"], region: "east", abbr: "WB" },
+  { slug: "andaman-nicobar", en: "Andaman & Nicobar", ta: "அந்தமான் நிக்கோபார்", ut: true, alt: ["Port Blair", "Andaman"], region: "east", abbr: "AN" },
+  { slug: "chandigarh", en: "Chandigarh", ta: "சண்டிகர்", ut: true, alt: [], region: "north", abbr: "CH" },
+  { slug: "dnh-dd", en: "Dadra & Nagar Haveli and Daman & Diu", ta: "தாத்ரா நகர் ஹவேலி, டாமன் டையூ", ut: true, alt: ["Daman", "Silvassa"], region: "west", abbr: "DD" },
+  { slug: "delhi", en: "Delhi", ta: "டெல்லி", ut: true, alt: ["New Delhi", "தில்லி"], region: "north", abbr: "DL" },
+  { slug: "jammu-kashmir", en: "Jammu & Kashmir", ta: "ஜம்மு காஷ்மீர்", ut: true, alt: ["Srinagar", "Kashmir", "காஷ்மீர்"], region: "north", abbr: "JK" },
+  { slug: "ladakh", en: "Ladakh", ta: "லடாக்", ut: true, alt: ["Leh", "Kargil"], region: "north", abbr: "LA" },
+  { slug: "lakshadweep", en: "Lakshadweep", ta: "லட்சத்தீவு", ut: true, alt: ["Kavaratti"], region: "south", abbr: "LD" },
+  { slug: "puducherry", en: "Puducherry", ta: "புதுச்சேரி", ut: true, alt: ["Pondicherry", "Karaikal", "காரைக்கால்"], region: "south", abbr: "PY" },
+];
+
+export const STATE_REGIONS: Record<State["region"], { en: string; ta: string }> = {
+  south: { en: "South", ta: "தென்னிந்தியா" },
+  north: { en: "North", ta: "வட இந்தியா" },
+  east: { en: "East", ta: "கிழக்கு" },
+  west: { en: "West", ta: "மேற்கு" },
+  central: { en: "Central", ta: "மத்திய இந்தியா" },
+  northeast: { en: "North-East", ta: "வடகிழக்கு" },
+};
+
+export type WorldRegion = { slug: string; en: string; ta: string; emoji: string; feeds: string[]; gnQuery?: string; gnQueryTa?: string };
+
+export const WORLD_REGIONS: WorldRegion[] = [
+  { slug: "asia", en: "Asia", ta: "ஆசியா", emoji: "🌏", feeds: ["https://feeds.bbci.co.uk/news/world/asia/rss.xml"] },
+  { slug: "sri-lanka", en: "Sri Lanka & Tamil diaspora", ta: "இலங்கை & புலம்பெயர் தமிழர்", emoji: "🏝️", feeds: [], gnQuery: "Sri Lanka", gnQueryTa: "இலங்கை" },
+  { slug: "middle-east", en: "Middle East & Gulf", ta: "மத்திய கிழக்கு & வளைகுடா", emoji: "🕌", feeds: ["https://feeds.bbci.co.uk/news/world/middle_east/rss.xml"], gnQueryTa: "வளைகுடா" },
+  { slug: "europe", en: "Europe", ta: "ஐரோப்பா", emoji: "🏰", feeds: ["https://feeds.bbci.co.uk/news/world/europe/rss.xml"] },
+  { slug: "americas", en: "Americas", ta: "அமெரிக்கா", emoji: "🗽", feeds: ["https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml", "https://feeds.bbci.co.uk/news/world/latin_america/rss.xml"] },
+  { slug: "africa", en: "Africa", ta: "ஆப்பிரிக்கா", emoji: "🌍", feeds: ["https://feeds.bbci.co.uk/news/world/africa/rss.xml"] },
+  { slug: "oceania", en: "Australia & Oceania", ta: "ஆஸ்திரேலியா", emoji: "🦘", feeds: ["https://feeds.bbci.co.uk/news/world/australia/rss.xml"] },
+];
