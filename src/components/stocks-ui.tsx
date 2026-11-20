@@ -27,6 +27,7 @@ export const MARKET_TABS = [
   { href: "/markets/watchlist", ta: "என் கண்காணிப்பு", en: "My watchlist", icon: "⭐" },
   { href: "/markets/mutual-funds", ta: "மியூச்சுவல் ஃபண்ட்", en: "Mutual funds", icon: "🏦" },
   { href: "/markets/ipo", ta: "IPO & முடிவுகள்", en: "IPOs & results", icon: "🗓️" },
+  { href: "/markets/mandi", ta: "மண்டி விலைகள்", en: "Mandi prices", icon: "🌾" },
   { href: "/markets/calculators", ta: "கணிப்பான்கள்", en: "Calculators", icon: "🧮" },
 ];
 export function MarketsNav() {

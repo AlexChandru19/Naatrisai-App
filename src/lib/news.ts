@@ -110,13 +110,20 @@ async function fetchFeed(f: Src): Promise<Article[]> {
 
 // ---- De-duplication + story clustering by headline similarity ----
 const STOP = new Set("the a an of in on at to for and or is are was were be by with from as after over into its it this that says said will new amid how why what who".split(" "));
-const tokens = (s: string) => new Set(s.toLowerCase().replace(/[^\p{L}\p{M}\p{N}\s]/gu, " ").split(/\s+/).filter((w) => w.length > 1 && !STOP.has(w)));
+/** Light normalisation so inflected forms match: Tamil words keep a 6-code-point stem
+ *  (சென்னையில் / சென்னைக்கு / சென்னை → "சென்னை"), English drops a plural "s"/"es"/"'s". */
+const norm = (w: string) => /[\u0B80-\u0BFF]/.test(w) ? [...w].slice(0, 6).join("") : w.length > 4 ? w.replace(/(?<=[^s])(es|s)$/, "") : w;
+const tokens = (s: string) => new Set(s.toLowerCase().replace(/[’']s\b/g, "").replace(/[^\p{L}\p{M}\p{N}\s]/gu, " ").split(/\s+/).filter((w) => w.length > 1 && !STOP.has(w)).map(norm));
 function overlap(a: Set<string>, b: Set<string>) {
   let inter = 0;
   for (const w of a) if (b.has(w)) inter++;
   return { inter, sim: inter / Math.max(1, Math.min(a.size, b.size)) };
 }
+const nums = (t: Set<string>) => [...t].filter((w) => /^\d{2,}$/.test(w));
 const sameStory = (a: Set<string>, b: Set<string>) => {
+  // different figures ("₹700 crore" vs "₹140 crore") mean different stories even when the wording matches
+  const na = nums(a), nb = nums(b);
+  if (na.length && nb.length && !na.some((n) => nb.includes(n))) return false;
   const { inter, sim } = overlap(a, b);
   return (sim >= 0.6 && inter >= 3) || (sim >= 0.85 && inter >= 2);
 };

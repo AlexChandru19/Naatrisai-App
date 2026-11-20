@@ -30,6 +30,7 @@ export function Footer() {
           <Link className="hover:text-kumkum-600" href="/markets/news"><L ta="சந்தைச் செய்திகள்" en="Market news" /></Link>
           <Link className="hover:text-kumkum-600" href="/markets/nifty50"><L ta="நிஃப்டி 50 வெப்ப வரைபடம்" en="NIFTY 50 heatmap" /></Link>
           <Link className="hover:text-kumkum-600" href="/markets/calculators"><L ta="தங்கம் & SIP கணிப்பான்" en="Gold & SIP calculators" /></Link>
+          <Link className="hover:text-kumkum-600" href="/developing"><L ta="வளரும் செய்திகள்" en="Developing stories" /></Link>
           <Link className="hover:text-kumkum-600" href="/bulletin"><L ta="WhatsApp சுருக்கம்" en="WhatsApp bulletin" /></Link>
           <Link className="hover:text-kumkum-600" href="/panchangam"><L ta="பஞ்சாங்கம்" en="Panchangam" /></Link>
           <Link className="hover:text-kumkum-600" href="/markets/mutual-funds"><L ta="மியூச்சுவல் ஃபண்ட் NAV" en="Mutual fund NAV" /></Link>

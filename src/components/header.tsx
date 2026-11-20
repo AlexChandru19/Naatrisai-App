@@ -27,6 +27,7 @@ export const MORE = [
   { href: "/markets/nifty50", ta: "நிஃப்டி 50 வெப்ப வரைபடம்", en: "NIFTY 50 heatmap", icon: "🟩" },
   { href: "/markets/calculators", ta: "தங்க நகை & SIP கணிப்பான்", en: "Gold & SIP calculators", icon: "🧮" },
   { href: "/exam-digest", ta: "TNPSC/UPSC நடப்பு நிகழ்வுகள்", en: "Exam current affairs", icon: "📚" },
+  { href: "/developing", ta: "வளரும் செய்திகள் (நேரலை)", en: "Developing stories (live)", icon: "🔴" },
   { href: "/bulletin", ta: "WhatsApp செய்திச் சுருக்கம்", en: "WhatsApp bulletin", icon: "🟢" },
   { href: "/panchangam", ta: "பஞ்சாங்கம்", en: "Panchangam", icon: "🪔" },
   { href: "/markets/mutual-funds", ta: "மியூச்சுவல் ஃபண்ட் NAV", en: "Mutual fund NAV", icon: "🏦" },

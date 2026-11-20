@@ -7,6 +7,7 @@ import { usePrefs } from "./providers";
 import { TimeAgo } from "./time-ago";
 import Link from "next/link";
 import { storyUrl } from "@/lib/story-url";
+import { coverage } from "@/lib/coverage";
 
 /** "N sources" chip for clustered stories; opens a panel listing every outlet's version. */
 export function SourcesBadge({ a, dark = false }: { a: Article; dark?: boolean }) {
@@ -33,6 +34,9 @@ export function SourcesBadge({ a, dark = false }: { a: Article; dark?: boolean }
             <p className="text-[11px] font-bold uppercase tracking-wider opacity-60">{lang === "ta" ? `இதே செய்தி — ${n} ஊடகங்களில்` : `Same story — ${n} outlets`}</p>
             <button onClick={() => setOpen(false)} className="grid h-8 w-8 place-items-center rounded-full hover:bg-ink-100 dark:hover:bg-white/10" aria-label="Close">✕</button>
           </div>
+          {(() => { const c = coverage(versions); const langs = { ta: versions.filter((v) => v.lang === "ta").length, en: versions.filter((v) => v.lang === "en").length }; return (
+            <p className="px-2 pb-2 text-[11.5px] opacity-75">{lang === "ta" ? `ஊடகக் கலவை: தமிழ் ${c.tamil} · தேசிய ${c.national} · உலக ${c.world} · மொழி: தமிழ் ${langs.ta} / ஆங்கிலம் ${langs.en}` : `Source mix: Tamil ${c.tamil} · Indian national ${c.national} · international ${c.world} · language: Tamil ${langs.ta} / English ${langs.en}`}</p>
+          ); })()}
           <ul className="max-h-[60vh] overflow-y-auto">
             {versions.map((v) => (
               <li key={v.link}>
