@@ -1,3 +1,4 @@
+import { SITE } from "./site";
 import { getAll } from "./news";
 import { briefingPicks } from "./briefing";
 import { getBullion } from "./bullion";
@@ -5,7 +6,7 @@ import { getFuel } from "./fuel";
 import { getMarkets } from "./markets";
 import type { Article } from "./types";
 
-export const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://naatrisai.vercel.app";
+export { SITE };
 const n = (v: number, d = 0) => v.toLocaleString("en-IN", { maximumFractionDigits: d, minimumFractionDigits: d });
 
 /** IST edition: morning (before 3 pm) or evening. */

@@ -1,4 +1,5 @@
+import { SITE } from "@/lib/site";
 import type { MetadataRoute } from "next";
 export default function robots(): MetadataRoute.Robots {
-  return { rules: [{ userAgent: "*", allow: "/", disallow: ["/offline", "/story/"] }], sitemap: "https://naatrisai.vercel.app/sitemap.xml" };
+  return { rules: [{ userAgent: "*", allow: "/", disallow: ["/offline", "/story/"] }], sitemap: `${SITE}/sitemap.xml`, host: SITE };
 }

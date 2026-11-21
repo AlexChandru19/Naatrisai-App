@@ -1,3 +1,4 @@
+import { SITE } from "@/lib/site";
 import type { Metadata, Viewport } from "next";
 import { Atkinson_Hyperlegible, Mukta_Malar, Noto_Sans_Tamil, Noto_Serif_Tamil, Noto_Serif } from "next/font/google";
 import { PREPAINT } from "@/lib/themes";
@@ -18,7 +19,6 @@ const serifTa = Noto_Serif_Tamil({ subsets: ["tamil"], weight: ["400", "600", "7
 const serifEn = Noto_Serif({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-serif-en", display: "swap", preload: false });
 const noto = Noto_Sans_Tamil({ subsets: ["tamil"], variable: "--font-noto-tamil", display: "swap" });
 
-const SITE = "https://naatrisai.vercel.app";
 const DESC = "நாற்றிசைச் செய்திகளும் ஒரே இடத்தில் — Live Tamil Nadu (all 38 districts), all Indian states and world news from trusted sources, in Tamil and English.";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

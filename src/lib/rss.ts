@@ -1,9 +1,10 @@
+import { SITE } from "./site";
 import type { Article } from "./types";
 import { getAll, getSection, getTopic, getDistrict, getFactChecks, getJobsNews, type FeedResult } from "./news";
 import { TOPICS } from "./topics";
 import { DISTRICTS } from "./geo";
 
-export const SITE = "https://naatrisai.vercel.app";
+export { SITE };
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 export type FeedDef = { key: string; ta: string; en: string; page: string; load: () => Promise<FeedResult> };

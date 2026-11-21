@@ -1,3 +1,4 @@
+import { SITE_HOST } from "@/lib/site";
 import { Resvg } from "@resvg/resvg-js";
 import { textSvg, wrap } from "@/lib/shape";
 
@@ -26,7 +27,7 @@ ${await textSvg("நாற்றிசை", 46, P + 84, P + 34, "#fff")}${await 
 ${body}
 <rect y="${H - (sq ? 170 : 120)}" width="${W}" height="${sq ? 170 : 120}" fill="#000" fill-opacity=".22"/>
 ${src ? await textSvg(src, sq ? 36 : 30, P, H - (sq ? 100 : 68), "#fcd667") : ""}${when ? await textSvg(when, sq ? 26 : 22, P, H - (sq ? 55 : 32), "#fff", 0.9) : ""}
-${await textSvg("naatrisai.vercel.app", 22, W - P - 230, H - (sq ? 55 : 32), "#fff", 0.9)}
+${await textSvg(SITE_HOST, 22, W - P - 230, H - (sq ? 55 : 32), "#fff", 0.9)}
 </svg>`;
   const png = new Resvg(svg, { font: { loadSystemFonts: false } }).render().asPng();
   return new Response(new Uint8Array(png), { headers: { "Content-Type": "image/png", "Cache-Control": "public, max-age=86400, s-maxage=604800, immutable" } });
