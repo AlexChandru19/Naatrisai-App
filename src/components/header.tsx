@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { SearchIcon } from "./search-icon";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { usePrefs, L } from "./providers";
@@ -92,8 +93,8 @@ export function Header() {
           </nav>
           <div className="ml-auto flex items-center gap-1">
             {ready && streak > 1 && <span className="hidden rounded-full bg-manjal-300/40 px-2 py-1 text-xs font-bold text-ink-900 sm:inline dark:text-manjal-300" title={lang === "ta" ? "தொடர் வாசிப்பு நாட்கள்" : "Daily reading streak"}>🔥 {streak}</span>}
-            <button onClick={() => window.dispatchEvent(new Event("ns:palette"))} data-palette-btn aria-label={lang === "ta" ? "விரைவுத் தேடல் (Ctrl+K)" : "Quick jump (Ctrl+K)"} title={lang === "ta" ? "விரைவுத் தேடல் (Ctrl/⌘ + K)" : "Quick jump (Ctrl/⌘ + K)"} className="grid h-9 w-9 place-items-center rounded-full text-[15px] font-black hover:bg-ink-100 dark:hover:bg-white/10">⌘</button>
-            <Link href="/search" aria-label={lang === "ta" ? "தேடல்" : "Search"} className="hidden h-9 w-9 place-items-center sm:grid rounded-full hover:bg-ink-100 dark:hover:bg-white/10" title={lang === "ta" ? "தேடல் ( / )" : "Search ( / )"}>🔍</Link>
+            <button onClick={() => window.dispatchEvent(new Event("ns:palette"))} data-palette-btn aria-label={lang === "ta" ? "தேடல் / விரைவுத் தாவல் (Ctrl+K)" : "Search / quick jump (Ctrl+K)"} title={lang === "ta" ? "தேடல் / விரைவுத் தாவல் (Ctrl + K)" : "Search / quick jump (Ctrl + K)"} className="grid h-9 w-9 place-items-center rounded-full hover:bg-ink-100 dark:hover:bg-white/10"><SearchIcon /></button>
+            
             <div className="flex rounded-full border border-ink-100 p-0.5 text-xs font-bold dark:border-white/10" role="group" aria-label="Language / மொழி">
               <button onClick={() => setLang("ta")} aria-pressed={lang === "ta"} className={`rounded-full px-2.5 py-1 transition ${lang === "ta" ? "bg-ink-900 text-white dark:bg-white dark:text-ink-900" : "opacity-70"}`}>தமிழ்</button>
               <button onClick={() => setLang("en")} aria-pressed={lang === "en"} className={`rounded-full px-2.5 py-1 transition ${lang === "en" ? "bg-ink-900 text-white dark:bg-white dark:text-ink-900" : "opacity-70"}`}>EN</button>

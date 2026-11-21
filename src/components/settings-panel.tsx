@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRef } from "react";
+import { useCatchUpPref } from "./catch-up";
 import { usePrefs, MODULES, type TextSize, type Module } from "./providers";
 import { TOPICS } from "@/lib/topics";
 import { DISTRICTS, STATES } from "@/lib/geo";
@@ -38,6 +39,7 @@ function Bars({ title, data, label }: { title: string; data: ReturnType<typeof m
 
 export function SettingsPanel({ onClose }: { onClose: () => void }) {
   const p = usePrefs();
+  const cu = useCatchUpPref();
   const ta = p.lang === "ta";
   const row = "flex items-center justify-between gap-3 py-3 border-b border-ink-100 dark:border-white/10";
   const sw = (on: boolean, f: () => void, label: string) => (
@@ -82,6 +84,7 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         </div>
         <div className={row}><div><b>{ta ? "எளிய / முதியோர் பயன்முறை" : "Simple / elder mode"}</b><p className="text-xs opacity-60">{ta ? "பெரிய எழுத்து, அதிக வேறுபாடு, குறைவான அலங்காரம்" : "Bigger text, higher contrast, fewer extras"}</p></div>{sw(p.simple, () => p.setSimple(!p.simple), "Simple mode")}</div>
         <div className={row}><div><b>{ta ? "லைட் / டேட்டா சேமிப்பு" : "Lite / data saver"}</b><p className="text-xs opacity-60">{ta ? "படங்களை ஏற்றாது — மெதுவான இணையத்திற்கு" : "Skips images — for slow or metered data"}</p></div>{sw(p.lite, () => p.setLite(!p.lite), "Lite mode")}</div>
+        <div className={row}><div><b>{ta ? "“கடைசி வருகைக்குப் பின்” பெட்டியைக் காட்டு" : "Show “since your last visit” box"}</b><p className="text-xs opacity-60">{ta ? "முகப்பில் நீங்கள் வராத நேரத்தின் புதிய செய்திகள்" : "New stories since you were last here, on the home page"}</p></div>{sw(cu.show, () => cu.setShow(!cu.show), ta ? "கடைசி வருகைக்குப் பின் பெட்டி" : "Since your last visit box")}</div>
         <A11ySettings ta={ta} row={row} sw={sw} />
         <div className={row}><div><b>{ta ? "இடைமுக மொழி" : "Interface language"}</b></div>
           <div className="flex rounded-full border border-ink-100 p-0.5 text-sm font-bold dark:border-white/10">

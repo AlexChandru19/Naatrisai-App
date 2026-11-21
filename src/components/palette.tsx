@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { SearchIcon } from "./search-icon";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DISTRICTS, STATES } from "@/lib/geo";
 import { TOPICS } from "@/lib/topics";
@@ -63,7 +64,7 @@ export function CommandPalette() {
     <div className="fixed inset-0 z-[70] flex items-start justify-center bg-black/45 p-3 pt-[10vh] backdrop-blur-[2px]" onClick={() => setOpen(false)} role="dialog" aria-modal="true" aria-label={ta ? "கட்டளைத் தட்டு" : "Command palette"}>
       <div onClick={(e) => e.stopPropagation()} className="fade-up w-full max-w-xl overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-2xl dark:border-white/10 dark:bg-ink-900">
         <div className="flex items-center gap-2 border-b border-ink-100 px-4 dark:border-white/10">
-          <span aria-hidden>⌘</span>
+          <SearchIcon className="h-5 w-5 shrink-0 opacity-60" />
           <input ref={input} autoFocus value={q} onChange={(e) => { setQ(e.target.value); setI(0); }} role="combobox" aria-expanded="true" aria-controls="cp-list" aria-activedescendant={all[sel] ? `cp-${sel}` : undefined}
             onKeyDown={(e) => { if (e.key === "ArrowDown") { e.preventDefault(); setI((x) => Math.min(all.length - 1, x + 1)); } else if (e.key === "ArrowUp") { e.preventDefault(); setI((x) => Math.max(0, x - 1)); } else if (e.key === "Enter") { e.preventDefault(); pick(all[sel]); } else if (e.key === "Escape") setOpen(false); }}
             placeholder={ta ? "மாவட்டம், மாநிலம், பங்கு, பக்கம், தீம்…" : "District, state, stock, page, theme…"} className="h-14 min-w-0 flex-1 bg-transparent text-base outline-none" aria-label={ta ? "தேடு" : "Search commands"} />
