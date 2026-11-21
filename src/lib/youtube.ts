@@ -94,7 +94,7 @@ async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
       base.note += ` len=${t.length}${/consent\.youtube|Before you continue/.test(t) ? " consent" : ""}${/confirm you.re not a bot|"LOGIN_REQUIRED"/.test(t) ? " botcheck" : ""}${/"videoDetails"/.test(t) ? " vd" : ""}`;
       const vid = t.match(/"videoDetails":\{"videoId":"([\w-]{11})"/)?.[1];
       const owner = t.match(/"videoDetails":\{[^}]*?"channelId":"([\w-]+)"/)?.[1];
-      const isLive = /"videoDetails":\{[^}]*?"isLive":true/.test(t) || /"isLiveNow":true/.test(t);
+      const isLive = /"videoDetails":\{[^}]*?"isLive":true/.test(t) || /"isLiveNow":true/.test(t) || (/"videoDetails":\{[^}]*?"isLiveContent":true/.test(t) && /"videoDetails":\{[^}]*?"lengthSeconds":"0"/.test(t));
       const okPlay = /"playabilityStatus":\{"status":"OK"/.test(t);
       const embedOk = !/"playableInEmbed":false/.test(t);
       const title = t.match(/"videoDetails":\{[^}]*?"title":"((?:[^"\\]|\\.)*)"/)?.[1];
@@ -102,6 +102,7 @@ async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
       // naming the live video in public metadata. We only read that metadata — playback happens in the viewer's browser —
       // and confirm embeddability separately through oEmbed.
       const challenged = /"playabilityStatus":\{"status":"LOGIN_REQUIRED"/.test(t);
+      base.note += ` vid=${vid ?? "-"} live=${isLive}`;
       if (vid && isLive && (okPlay || challenged) && (!owner || owner === c.id)) {
         base.videoId = vid; base.live = true; base.title = title ? JSON.parse(`"${title}"`) : null;
         base.embeddable = okPlay ? embedOk : await embeddable(vid);
@@ -111,7 +112,7 @@ async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
   if (base.live) base.via = "live-page";
   // If YouTube didn't give us the live page (e.g. it challenges server requests), use the newest feed entry
   // titled as a live stream — clearly labelled as unconfirmed, since it may already have ended.
-  if (!base.live && !/ vd/.test(base.note ?? "")) {
+  if (!base.live && (!/ vd/.test(base.note ?? "") || / botcheck/.test(base.note ?? ""))) {
     const cand = latest.filter((x) => x.channelId === c.id && x.live && Date.now() - Date.parse(x.published) < 12 * 3600e3)[0];
     if (cand && (await embeddable(cand.id))) { base.videoId = cand.id; base.title = cand.title; base.embeddable = true; base.via = "feed"; }
   }
