@@ -72,7 +72,7 @@ export async function getVideos(): Promise<Video[]> {
   return lists.flat().sort((a, b) => b.published.localeCompare(a.published));
 }
 
-export type LiveInfo = { channelId: string; videoId: string | null; live: boolean; embeddable: boolean; title: string | null; fallback: Video | null };
+export type LiveInfo = { channelId: string; videoId: string | null; live: boolean; embeddable: boolean; title: string | null; fallback: Video | null; via?: string; note?: string };
 const YT_UA = { "User-Agent": "Mozilla/5.0 (compatible; NaatrisaiBot/1.0; +https://naatrisai.in/about)", "Accept-Language": "en" };
 
 /** Is a specific video allowed in embeds? YouTube's oEmbed answers 401/403 when the owner disabled embedding. */
@@ -88,8 +88,10 @@ async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
   const base: LiveInfo = { channelId: c.id, videoId: null, live: false, embeddable: false, title: null, fallback: null };
   try {
     const r = await fetch(`https://www.youtube.com/channel/${c.id}/live`, { next: { revalidate: 180 }, headers: YT_UA, signal: AbortSignal.timeout(8000) });
+    base.note = `live-page ${r.status}`;
     if (r.ok) {
       const t = await r.text();
+      base.note += ` len=${t.length}${/consent\.youtube|Before you continue/.test(t) ? " consent" : ""}${/confirm you.re not a bot|"LOGIN_REQUIRED"/.test(t) ? " botcheck" : ""}${/"videoDetails"/.test(t) ? " vd" : ""}`;
       const vid = t.match(/"videoDetails":\{"videoId":"([\w-]{11})"/)?.[1];
       const owner = t.match(/"videoDetails":\{[^}]*?"channelId":"([\w-]+)"/)?.[1];
       const isLive = /"videoDetails":\{[^}]*?"isLive":true/.test(t) || /"isLiveNow":true/.test(t);
