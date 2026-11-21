@@ -103,8 +103,15 @@ async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
       }
     }
   } catch {}
+  if (base.live) base.via = "live-page";
+  // If YouTube didn't give us the live page (e.g. it challenges server requests), use the newest feed entry
+  // titled as a live stream — clearly labelled as unconfirmed, since it may already have ended.
+  if (!base.live && !/ vd/.test(base.note ?? "")) {
+    const cand = latest.filter((x) => x.channelId === c.id && x.live && Date.now() - Date.parse(x.published) < 12 * 3600e3)[0];
+    if (cand && (await embeddable(cand.id))) { base.videoId = cand.id; base.title = cand.title; base.embeddable = true; base.via = "feed"; }
+  }
   // Not live (or live but not embeddable): the newest upload that allows embedding.
-  if (!base.live || !base.embeddable) {
+  if (!base.videoId || !base.embeddable) {
     for (const v of latest.filter((x) => x.channelId === c.id && !x.live).slice(0, 4)) {
       if (await embeddable(v.id)) { base.fallback = v; break; }
     }

@@ -52,9 +52,10 @@ export function LiveTV({ channels, videos, live }: { channels: readonly Ch[]; vi
   const [failed, setFailed] = useState<Record<string, number>>({});
   const info = live.find((l) => l.channelId === ch.id);
   const isLive = !pick && !!info?.live && info.embeddable && !!info.videoId;
+  const probable = !pick && !isLive && info?.via === "feed" && !!info.videoId;
   const fb = info?.fallback ?? null;
-  const id = pick?.id ?? (isLive ? info!.videoId! : fb?.id ?? null);
-  const title = pick?.title ?? (isLive ? info!.title ?? `${ch.en} live` : fb?.title ?? "");
+  const id = pick?.id ?? (isLive || probable ? info!.videoId! : fb?.id ?? null);
+  const title = pick?.title ?? (isLive || probable ? info!.title ?? `${ch.en} live` : fb?.title ?? "");
   const err = id ? failed[id] : undefined;
   const watch = id ? `https://www.youtube.com/watch?v=${id}` : `https://www.youtube.com/@${ch.handle}/live`;
   const list = videos.filter((v) => v.channelId === ch.id);
@@ -62,6 +63,7 @@ export function LiveTV({ channels, videos, live }: { channels: readonly Ch[]; vi
   const label = pick
     ? (ta ? "நீங்கள் தேர்ந்தெடுத்த வீடியோ" : "Your selected video")
     : isLive ? (ta ? "🔴 இப்போது நேரலை" : "🔴 Live now")
+    : probable ? (ta ? "சமீபத்திய நேரலை ஒளிபரப்பு — இப்போதும் நேரலையா என உறுதிசெய்ய முடியவில்லை" : "Latest live broadcast — couldn't confirm it's still on air")
     : fb ? (ta ? "இப்போது நேரலையில் இல்லை — சமீபத்திய வீடியோ காட்டப்படுகிறது" : "Not live right now — showing latest video")
     : (ta ? "இப்போது நேரலையில் இல்லை" : "Not live right now");
   return (
@@ -69,7 +71,7 @@ export function LiveTV({ channels, videos, live }: { channels: readonly Ch[]; vi
       <div>
         <div className="no-scrollbar -mx-1 mb-3 flex gap-2 overflow-x-auto px-1">
           {channels.map((c) => {
-            const on = live.some((l) => l.channelId === c.id && l.live && l.embeddable);
+            const on = live.some((l) => l.channelId === c.id && l.embeddable && (l.live || l.via === "feed"));
             return (
               <button key={c.id} data-ch={c.handle} onClick={() => { setCh(c); setPick(null); setPlay(false); }} aria-pressed={c.id === ch.id} className={`shrink-0 rounded-full px-4 py-2 text-sm font-extrabold transition ${c.id === ch.id ? "bg-kumkum-600 text-white" : "border border-ink-100 bg-white dark:border-white/10 dark:bg-ink-900"}`}>
                 {on && <span className="live-dot mr-1 text-red-500" aria-label={ta ? "நேரலை" : "live"}>●</span>}{ta ? c.ta : c.en}
