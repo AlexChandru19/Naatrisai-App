@@ -92,9 +92,12 @@ async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
     if (r.ok) {
       const t = await r.text();
       base.note += ` len=${t.length}${/consent\.youtube|Before you continue/.test(t) ? " consent" : ""}${/confirm you.re not a bot|"LOGIN_REQUIRED"/.test(t) ? " botcheck" : ""}${/"videoDetails"/.test(t) ? " vd" : ""}`;
-      const vid = t.match(/"videoDetails":\{"videoId":"([\w-]{11})"/)?.[1];
+      // When the channel is on air, /live serves that stream's watch page (canonical = watch?v=ID).
+      const canon = t.match(/<link rel="canonical" href="https:\/\/www\.youtube\.com\/watch\?v=([\w-]{11})"/)?.[1];
+      const vid = t.match(/"videoDetails":\{"videoId":"([\w-]{11})"/)?.[1] ?? canon;
       const owner = t.match(/"videoDetails":\{[^}]*?"channelId":"([\w-]+)"/)?.[1];
-      const isLive = /"videoDetails":\{[^}]*?"isLive":true/.test(t) || /"isLiveNow":true/.test(t) || (/"videoDetails":\{[^}]*?"isLiveContent":true/.test(t) && /"videoDetails":\{[^}]*?"lengthSeconds":"0"/.test(t));
+      const upcoming = /"isUpcoming":true/.test(t);
+      const isLive = !upcoming && !!canon && /"isLiveContent":true|"isLive":true|"isLiveNow":true|"style":"LIVE"|"BADGE_STYLE_TYPE_LIVE_NOW"/.test(t) || /"videoDetails":\{[^}]*?"isLive":true/.test(t) || /"isLiveNow":true/.test(t) || (/"videoDetails":\{[^}]*?"isLiveContent":true/.test(t) && /"videoDetails":\{[^}]*?"lengthSeconds":"0"/.test(t));
       const okPlay = /"playabilityStatus":\{"status":"OK"/.test(t);
       const embedOk = !/"playableInEmbed":false/.test(t);
       const title = t.match(/"videoDetails":\{[^}]*?"title":"((?:[^"\\]|\\.)*)"/)?.[1];
@@ -102,7 +105,7 @@ async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
       // naming the live video in public metadata. We only read that metadata — playback happens in the viewer's browser —
       // and confirm embeddability separately through oEmbed.
       const challenged = /"playabilityStatus":\{"status":"LOGIN_REQUIRED"/.test(t);
-      base.note += ` vid=${vid ?? "-"} live=${isLive}`;
+      base.note += ` vid=${vid ?? "-"} canon=${canon ?? "-"} up=${upcoming} live=${isLive}`;
       if (vid && isLive && (okPlay || challenged) && (!owner || owner === c.id)) {
         base.videoId = vid; base.live = true; base.title = title ? JSON.parse(`"${title}"`) : null;
         base.embeddable = okPlay ? embedOk : await embeddable(vid);
