@@ -71,3 +71,44 @@ export async function getVideos(): Promise<Video[]> {
   }));
   return lists.flat().sort((a, b) => b.published.localeCompare(a.published));
 }
+
+export type LiveInfo = { channelId: string; videoId: string | null; live: boolean; embeddable: boolean; title: string | null; fallback: Video | null };
+const YT_UA = { "User-Agent": "Mozilla/5.0 (compatible; NaatrisaiBot/1.0; +https://naatrisai.in/about)", "Accept-Language": "en" };
+
+/** Is a specific video allowed in embeds? YouTube's oEmbed answers 401/403 when the owner disabled embedding. */
+async function embeddable(id: string): Promise<boolean> {
+  try {
+    const r = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}`, { next: { revalidate: 3600 }, headers: YT_UA, signal: AbortSignal.timeout(5000) });
+    return r.ok;
+  } catch { return true; } // unknown: let the player's own error handler decide
+}
+
+/** Resolve the channel's current live stream from its public /live page (redirects to the live watch page when on air). */
+async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
+  const base: LiveInfo = { channelId: c.id, videoId: null, live: false, embeddable: false, title: null, fallback: null };
+  try {
+    const r = await fetch(`https://www.youtube.com/channel/${c.id}/live`, { next: { revalidate: 180 }, headers: YT_UA, signal: AbortSignal.timeout(8000) });
+    if (r.ok) {
+      const t = await r.text();
+      const vid = t.match(/"videoDetails":\{"videoId":"([\w-]{11})"/)?.[1];
+      const owner = t.match(/"videoDetails":\{[^}]*?"channelId":"([\w-]+)"/)?.[1];
+      const isLive = /"videoDetails":\{[^}]*?"isLive":true/.test(t) || /"isLiveNow":true/.test(t);
+      const okPlay = /"playabilityStatus":\{"status":"OK"/.test(t);
+      const embedOk = !/"playableInEmbed":false/.test(t);
+      const title = t.match(/"videoDetails":\{[^}]*?"title":"((?:[^"\\]|\\.)*)"/)?.[1];
+      if (vid && isLive && okPlay && (!owner || owner === c.id)) {
+        base.videoId = vid; base.live = true; base.embeddable = embedOk; base.title = title ? JSON.parse(`"${title}"`) : null;
+      }
+    }
+  } catch {}
+  // Not live (or live but not embeddable): the newest upload that allows embedding.
+  if (!base.live || !base.embeddable) {
+    for (const v of latest.filter((x) => x.channelId === c.id && !x.live).slice(0, 4)) {
+      if (await embeddable(v.id)) { base.fallback = v; break; }
+    }
+  }
+  return base;
+}
+export async function getLiveInfo(videos: Video[]): Promise<LiveInfo[]> {
+  return Promise.all(CHANNELS.map((c) => liveOf(c, videos)));
+}
