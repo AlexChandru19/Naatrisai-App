@@ -98,8 +98,13 @@ async function liveOf(c: Ch, latest: Video[]): Promise<LiveInfo> {
       const okPlay = /"playabilityStatus":\{"status":"OK"/.test(t);
       const embedOk = !/"playableInEmbed":false/.test(t);
       const title = t.match(/"videoDetails":\{[^}]*?"title":"((?:[^"\\]|\\.)*)"/)?.[1];
-      if (vid && isLive && okPlay && (!owner || owner === c.id)) {
-        base.videoId = vid; base.live = true; base.embeddable = embedOk; base.title = title ? JSON.parse(`"${title}"`) : null;
+      // YouTube sometimes answers server requests with a sign-in/bot challenge for *playback* (LOGIN_REQUIRED) while still
+      // naming the live video in public metadata. We only read that metadata — playback happens in the viewer's browser —
+      // and confirm embeddability separately through oEmbed.
+      const challenged = /"playabilityStatus":\{"status":"LOGIN_REQUIRED"/.test(t);
+      if (vid && isLive && (okPlay || challenged) && (!owner || owner === c.id)) {
+        base.videoId = vid; base.live = true; base.title = title ? JSON.parse(`"${title}"`) : null;
+        base.embeddable = okPlay ? embedOk : await embeddable(vid);
       }
     }
   } catch {}
