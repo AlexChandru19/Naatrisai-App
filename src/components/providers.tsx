@@ -120,7 +120,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     setReady(true);
     /* eslint-enable react-hooks/set-state-in-effect */
     // Offline support: register the service worker in production.
-    if ("serviceWorker" in navigator && location.hostname !== "localhost") navigator.serviceWorker.register("/sw.js").catch(() => {});
+    if ("serviceWorker" in navigator && location.hostname !== "localhost") navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).then((r) => r.update()).catch(() => {});
   }, []);
 
   const setLang = useCallback((l: UILang) => { setLangS(l); localStorage.setItem("ns-lang", l); document.documentElement.lang = l; }, []);

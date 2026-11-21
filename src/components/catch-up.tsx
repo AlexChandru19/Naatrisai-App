@@ -35,12 +35,12 @@ export function CatchUp({ articles }: { articles: Article[] }) {
   const ta = lang === "ta";
   return (
     <section aria-label={ta ? "கடைசி வருகைக்குப் பின்" : "Since your last visit"} className="fade-up mt-4 rounded-3xl border border-peacock-600/25 bg-gradient-to-r from-peacock-600/10 to-sky-500/5 p-4 dark:border-teal-300/20">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex items-start gap-2">
         <h2 className="min-w-0 flex-1 font-extrabold">👋 {ta ? `நீங்கள் கடைசியாக வந்தது ${timeAgo(new Date(prevVisit).toISOString(), "ta")} — அதன்பின் ${fresh.length} புதிய செய்திகள்` : `Since your last visit (${timeAgo(new Date(prevVisit).toISOString(), "en")}): ${fresh.length} new stories`}</h2>
-        <div className="flex items-center gap-1">
-          <button onClick={() => { dismiss(); window.dispatchEvent(new Event("ns:fresh")); }} className="rounded-full bg-peacock-600 px-4 py-1.5 text-sm font-bold text-white">{ta ? "எல்லாப் புதியவையும் →" : "Catch up on all →"}</button>
-          <button onClick={dismiss} data-catchup-close aria-label={ta ? "இந்தப் பெட்டியை மூடு" : "Close this box"} title={ta ? "மூடு" : "Close"} className="grid h-9 w-9 place-items-center rounded-full text-lg font-bold opacity-70 hover:bg-ink-100 hover:opacity-100 dark:hover:bg-white/10">✕</button>
-        </div>
+        <button onClick={dismiss} data-catchup-close aria-label={ta ? "இந்தப் பெட்டியை மூடு" : "Close this box"} title={ta ? "மூடு" : "Close"} className="-mr-1 -mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full text-lg font-bold opacity-70 hover:bg-ink-100 hover:opacity-100 dark:hover:bg-white/10">✕</button>
+      </div>
+      <div className="mt-2">
+        <button onClick={() => { dismiss(); window.dispatchEvent(new Event("ns:fresh")); }} className="rounded-full bg-peacock-600 px-4 py-1.5 text-sm font-bold text-white">{ta ? "எல்லாப் புதியவையும் →" : "Catch up on all →"}</button>
       </div>
       <ol className="mt-2 grid gap-x-6 gap-y-1 text-[14.5px] sm:grid-cols-2">
         {fresh.slice(0, 6).map((a, i) => (

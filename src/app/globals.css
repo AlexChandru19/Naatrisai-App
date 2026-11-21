@@ -195,3 +195,6 @@ main :is(span, p, div, small, time, a, li, b).opacity-65 { opacity: .8; }
 .dark .chip-c { color: color-mix(in srgb, var(--chip) 45%, #fff); }
 html[data-theme="hc"] .chip-c { color: #000; border-color: #000 !important; }
 html[data-theme="hc"] [data-heatmap] a { filter: brightness(.78) contrast(1.1); }
+
+/* Grid items may shrink below their content's min width (prevents sideways overflow on 360px phones). */
+.grid > * { min-width: 0; }

@@ -12,7 +12,7 @@ import { shareImage } from "./share-image";
 import { useAudio } from "./audio";
 import { QuickPeek } from "./quick-peek";
 
-const btn = "grid h-9 w-9 place-items-center rounded-full text-[17px] transition hover:bg-ink-100 active:scale-90 dark:hover:bg-white/10";
+const btn = "grid h-8 w-8 min-[380px]:h-9 min-[380px]:w-9 place-items-center rounded-full text-[17px] transition hover:bg-ink-100 active:scale-90 dark:hover:bg-white/10";
 
 export function ArticleActions({ a, compact = false }: { a: Article; compact?: boolean }) {
   const { saved, toggleSave, reactions, react, lang, hide } = usePrefs();
@@ -61,12 +61,12 @@ export function ArticleActions({ a, compact = false }: { a: Article; compact?: b
         )}
       </div>
       <button className={btn} onClick={share} aria-label="Share" title={lang === "ta" ? "பகிர்" : "Share"}>📤</button>
-      <Link className={btn} href={storyUrl(a)} aria-label={lang === "ta" ? "முழு கவரேஜ்" : "Full coverage"} title={lang === "ta" ? "முழு கவரேஜ் — எல்லா ஊடகங்களும், காலவரிசை" : "Full coverage — every outlet, timeline"}>🧭</Link>
+      <Link className={`${btn} max-[379px]:hidden`} href={storyUrl(a)} aria-label={lang === "ta" ? "முழு கவரேஜ்" : "Full coverage"} title={lang === "ta" ? "முழு கவரேஜ் — எல்லா ஊடகங்களும், காலவரிசை" : "Full coverage — every outlet, timeline"}>🧭</Link>
       {aiOn && <button className={btn} onClick={() => setAi(true)} aria-label={lang === "ta" ? "AI முக்கியக் குறிப்புகள்" : "AI key points"} title={lang === "ta" ? "AI முக்கியக் குறிப்புகள்" : "AI key points"}>✨</button>}
       {peek && createPortal(<QuickPeek a={a} ta={lang === "ta"} onClose={() => setPeek(false)} />, document.body)}
       {pick && createPortal(<ListPicker a={a} onClose={() => setPick(false)} />, document.body)}
       {ai && createPortal(<AiQuick id={a.id} link={a.link} onClose={() => setAi(false)} />, document.body)}
-      {!compact && <button className={btn} onClick={copy} aria-label="Copy link" title={lang === "ta" ? "இணைப்பை நகலெடு" : "Copy link"}>🔗</button>}
+      {!compact && <button className={`${btn} max-[419px]:hidden`} onClick={copy} aria-label="Copy link" title={lang === "ta" ? "இணைப்பை நகலெடு" : "Copy link"}>🔗</button>}
       <div className="relative">
         <button className={btn} onClick={() => setMore((o) => !o)} aria-label={lang === "ta" ? "மேலும்" : "More"} aria-expanded={more} title={lang === "ta" ? "மேலும்" : "More"}>⋯</button>
         {more && (

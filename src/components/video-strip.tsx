@@ -11,7 +11,7 @@ export function VideoStrip({ videos }: { videos: Video[] }) {
   return (
     <section data-mod="videos" className="mt-8">
       <div className="mb-3 flex items-center justify-between"><h2 className="text-xl font-extrabold sm:text-2xl">📺 {ta ? "செய்திக் காணொளிகள்" : "News videos"}</h2><Link href="/live" className="text-sm font-bold text-kumkum-600 dark:text-manjal-400">{ta ? "நேரலை டிவி →" : "Live TV →"}</Link></div>
-      <div className="no-scrollbar -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+      <div className="no-scrollbar -mx-3 flex snap-x gap-3 overflow-x-auto px-3 sm:-mx-4 sm:px-4 pb-2">
         {videos.map((v) => (
           <a key={v.id} href={`https://www.youtube.com/watch?v=${v.id}`} target="_blank" rel="noopener noreferrer" className="group w-60 shrink-0 snap-start">
             <div className="relative aspect-video overflow-hidden rounded-2xl bg-ink-900">

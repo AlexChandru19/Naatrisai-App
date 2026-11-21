@@ -91,7 +91,7 @@ export function Header() {
             ))}
             <button onClick={() => setMore(true)} className="rounded-full px-3 py-1.5 text-[14.5px] font-semibold text-ink-900/75 hover:bg-kumkum-50 dark:text-white/75 dark:hover:bg-white/10" aria-haspopup="dialog">{lang === "ta" ? "மேலும் ▾" : "More ▾"}</button>
           </nav>
-          <div className="ml-auto flex items-center gap-1">
+          <div className="ml-auto flex min-w-0 items-center gap-0.5 min-[380px]:gap-1">
             {ready && streak > 1 && <span className="hidden rounded-full bg-manjal-300/40 px-2 py-1 text-xs font-bold text-ink-900 sm:inline dark:text-manjal-300" title={lang === "ta" ? "தொடர் வாசிப்பு நாட்கள்" : "Daily reading streak"}>🔥 {streak}</span>}
             <button onClick={() => window.dispatchEvent(new Event("ns:palette"))} data-palette-btn aria-label={lang === "ta" ? "தேடல் / விரைவுத் தாவல் (Ctrl+K)" : "Search / quick jump (Ctrl+K)"} title={lang === "ta" ? "தேடல் / விரைவுத் தாவல் (Ctrl + K)" : "Search / quick jump (Ctrl + K)"} className="grid h-9 w-9 place-items-center rounded-full hover:bg-ink-100 dark:hover:bg-white/10"><SearchIcon /></button>
             
@@ -100,7 +100,7 @@ export function Header() {
               <button onClick={() => setLang("en")} aria-pressed={lang === "en"} className={`rounded-full px-2.5 py-1 transition ${lang === "en" ? "bg-ink-900 text-white dark:bg-white dark:text-ink-900" : "opacity-70"}`}>EN</button>
             </div>
             <ThemeButton ta={lang === "ta"} />
-            <button onClick={() => setSettings(true)} aria-label={lang === "ta" ? "அமைப்புகள்" : "Settings"} className="grid h-9 w-9 place-items-center rounded-full text-lg transition hover:bg-ink-100 dark:hover:bg-white/10">⚙️</button>
+            <button onClick={() => setSettings(true)} aria-label={lang === "ta" ? "அமைப்புகள்" : "Settings"} className="hidden min-[380px]:grid h-9 w-9 place-items-center rounded-full text-lg transition hover:bg-ink-100 dark:hover:bg-white/10">⚙️</button>
           </div>
         </div>
         <div className="mx-auto hidden max-w-7xl items-center justify-between px-5 pb-1.5 text-xs text-ink-900/65 sm:flex dark:text-white/60">
@@ -125,8 +125,8 @@ export function Header() {
       </nav>
       {more && (
         <div className="fixed inset-0 z-50 grid place-items-end bg-black/40 backdrop-blur-[2px] sm:place-items-center" onClick={() => setMore(false)} role="dialog" aria-modal="true" aria-label={lang === "ta" ? "மேலும்" : "More"}>
-          <div onClick={(e) => e.stopPropagation()} className="fade-up w-full max-w-lg rounded-t-3xl bg-white p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl sm:rounded-3xl dark:bg-ink-900">
-            <div className="mb-2 flex items-center justify-between"><b className="text-lg">{lang === "ta" ? "நாற்றிசையில் மேலும்" : "More in Naatrisai"}</b><button onClick={() => setMore(false)} className="grid h-9 w-9 place-items-center rounded-full hover:bg-ink-100 dark:hover:bg-white/10" aria-label="Close">✕</button></div>
+          <div onClick={(e) => e.stopPropagation()} data-more-sheet className="fade-up max-h-[85dvh] w-full max-w-lg touch-pan-y overflow-y-auto overscroll-contain rounded-t-3xl bg-white p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl [-webkit-overflow-scrolling:touch] sm:rounded-3xl dark:bg-ink-900">
+            <div className="sticky -top-4 z-10 -mx-4 -mt-4 mb-2 flex items-center justify-between bg-white px-4 pb-2 pt-4 dark:bg-ink-900"><b className="text-lg">{lang === "ta" ? "நாற்றிசையில் மேலும்" : "More in Naatrisai"}</b><button onClick={() => setMore(false)} className="grid h-9 w-9 place-items-center rounded-full hover:bg-ink-100 dark:hover:bg-white/10" aria-label="Close">✕</button></div>
             <div className="grid grid-cols-3 gap-2">
               {MORE.map((m) => (
                 <Link key={m.href} href={m.href} className={`flex flex-col items-center gap-1 rounded-2xl border p-3 text-center text-[13px] font-bold transition hover:-translate-y-0.5 ${active(m.href) ? "border-kumkum-600 bg-kumkum-50 dark:bg-white/10" : "border-ink-100 dark:border-white/10"}`}>

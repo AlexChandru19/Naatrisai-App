@@ -10,6 +10,7 @@ import { ReadingRuler } from "@/components/a11y";
 import { AudioProvider } from "@/components/audio";
 import { CommandPalette } from "@/components/palette";
 import { AlertWatcher } from "@/components/price-alerts";
+import { AutoRefresh } from "@/components/auto-refresh";
 
 const mukta = Mukta_Malar({ subsets: ["tamil", "latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-mukta", display: "swap" });
 const atkinson = Atkinson_Hyperlegible({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-atkinson", display: "swap", preload: false });
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReadingRuler />
           <CommandPalette />
           <AlertWatcher />
+          <AutoRefresh />
         </AudioProvider>
         </Providers>
       </body>
